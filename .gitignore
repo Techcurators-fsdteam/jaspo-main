@@ -1,0 +1,10 @@
+# global
+node_modules/
+
+# optional (explicit, but not strictly needed if above exists)
+backend/node_modules/
+frontend/node_modules/
+
+# build outputs
+.next/
+dist/

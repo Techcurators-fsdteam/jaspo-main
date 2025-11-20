@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+set -e
+
+echo "Running backend lint..."
+cd backend
+pnpm run lint
+pnpm run build
+
+echo "Running frontend lint..."
+cd ../frontend
+pnpm run lint
+pnpm run build
+
+# go back to repo root so git isn’t confused about paths
+cd ..
