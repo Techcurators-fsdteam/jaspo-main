@@ -1,12 +1,12 @@
-name: Backend CI
+name: Frontend CI
 
 on:
   push:
     paths:
-      - "backend/**"
+      - "frontend/**"
   pull_request:
     paths:
-      - "backend/**"
+      - "frontend/**"
 
 jobs:
   build-test:
@@ -14,7 +14,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: backend
+        working-directory: frontend
 
     steps:
       - name: Checkout code
@@ -25,42 +25,30 @@ jobs:
         with:
           node-version: 22
           cache: "pnpm"
-          cache-dependency-path: backend/pnpm-lock.yaml
+          cache-dependency-path: frontend/pnpm-lock.yaml
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
           version: 9
-          run_install: false # We install manually next
+          run_install: false # we'll install manually
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
         env:
           CI: true
 
-      - name: Run lint
-        run: pnpm lint
+      - name: Lint
+        run: pnpm run lint
         env:
           CI: true
 
       - name: Build
-        run: pnpm build
+        run: pnpm run build
         env:
           CI: true
 
-      - name: Run unit tests
-        run: pnpm test
+      - name: Test
+        run: pnpm run test
         env:
           CI: true
-
-      # Optional: Include this if you want coverage
-      # - name: Run test coverage
-      #   run: pnpm test:cov
-      #   env:
-      #     CI: true
-
-      # Optional: Include this only if you want to run e2e tests
-      # - name: Run e2e tests
-      #   run: pnpm test:e2e
-      #   env:
-      #     CI: true
