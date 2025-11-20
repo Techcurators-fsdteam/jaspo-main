@@ -12,6 +12,10 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,31 +23,44 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "22"
+          node-version: 22
+          cache: "pnpm"
+          cache-dependency-path: backend/pnpm-lock.yaml
 
-      - name: Cache pnpm store
-        uses: actions/cache@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('backend/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          version: 9
+          run_install: false # We install manually next
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-        working-directory: backend
+        env:
+          CI: true
 
       - name: Run lint
         run: pnpm lint
-        working-directory: backend
+        env:
+          CI: true
 
       - name: Build
         run: pnpm build
-        working-directory: backend
+        env:
+          CI: true
 
-      - name: Run tests
+      - name: Run unit tests
         run: pnpm test
-        working-directory: backend
+        env:
+          CI: true
+
+      # Optional: Include this if you want coverage
+      # - name: Run test coverage
+      #   run: pnpm test:cov
+      #   env:
+      #     CI: true
+
+      # Optional: Include this only if you want to run e2e tests
+      # - name: Run e2e tests
+      #   run: pnpm test:e2e
+      #   env:
+      #     CI: true
