@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "preinstall": "npx only-allow pnpm",
-    "test": "echo \"No tests implemented yet\""
+    "lint": "eslint"
   },
   "dependencies": {
     "next": "16.0.3",
